@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ideas</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+  </head>
+  <body>
+    <h1>list of projects</h1>
+    <ul>
+      <% docs.forEach(function(doc) { %>
+        <li><%= doc.author %> -<%= doc.likes %></li>
+      <% }); %>
+    </ul>
+  </body>
+</html>

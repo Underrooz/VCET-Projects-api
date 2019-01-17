@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ideas</title>
+  </head>
+
+  <body>
+    <h1>list of ideas</h1>
+    <h2><%= docs.length %></h2>
+    <table>
+      <tr>
+        <th>Authors</th>
+        <th>Abstract</th>
+        <th>Likes</th>
+      </tr>
+      <% docs.forEach(function(doc) { %>
+        <tr>
+          <td><%= doc.author %></td>
+          <td><%= doc.abstract %></td>
+          <td><%= doc.likes %></td>
+        </tr>
+      <% }); %>
+    </table>
+  </body>
+</html>
