@@ -10,7 +10,7 @@
   "keywords": [
     "vcet"
   ],
-  "author": "Tarun TEIT",
+  "author": "Tarun TEIT <parmartarun.dev@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
