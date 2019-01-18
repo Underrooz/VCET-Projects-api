@@ -11,6 +11,7 @@ const ideaRoutes = require('./api/routes/idea');
 const userRoutes = require('./api/routes/user');
 const indexRoutes = require('./api/routes/index');
 
+
 mongoose.connect('mongodb://Tarun:'+ process.env.MONGO_ATLAS_PW +'@cluster0-shard-00-00-gwous.mongodb.net:27017,cluster0-shard-00-01-gwous.mongodb.net:27017,cluster0-shard-00-02-gwous.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true',
 {
   useNewUrlParser: true
@@ -30,11 +31,11 @@ app.set('view engine', 'ejs');
 //    return res.status(200).json({});
 //  }
 //});
-
+//app.use('/', indexRoutes);
 app.use('/projects', projectRoutes);
 app.use('/ideas', ideaRoutes);
 app.use('/user', userRoutes);
-app.use('/',indexRoutes);
+
 
 app.use((req, res, next)=>{
   const error = new Error('Not Found');
