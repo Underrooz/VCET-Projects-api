@@ -19,7 +19,7 @@ router.get('/', (req, res, next)=>{
         data
       };
       res.status(200).json(_data);
-      res(render('projects'));
+    
     }
   }).catch(err=>{
     console.log(err); 
