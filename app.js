@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+const cors = require("cors");
 
 
 const projectRoutes = require('./api/routes/project');
@@ -23,16 +24,24 @@ app.use(bodyParser.json());
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-//app.use((req, res, next)=>{
-//  res.header("Acess-Control-Allow-origin",'*');
-//  res.header("Acess-Control-Allow-Headers","Origin, X-Requested-With, Context-Type, Authorization");
-//  if (req.method === 'OPTIONS') {
-//    res.header('Acess-Control-Allow-Methods','PUT,POST,PATCH,DELETE,GET');
-//    return res.status(200).json({});
-//  }
-//});
+// app.use((req, res)=>{
+//   console.log("in ac");
+//   res.header("Acess-Control-Allow-origin",'*');
+//   res.header("Acess-Control-Allow-Headers","Origin, X-Requested-With, Context-Type, Authorization");
+//   if (req.method === 'OPTIONS') {
+//     res.header('Acess-Control-Allow-Methods','PUT,POST,PATCH,DELETE,GET');
+//     return res.status(200).json({hey:"hey"});
+//   }
+// });
 
 //app.use('/', indexRoutes);
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+next();
+});
+app.options('*', cors()); 
 app.get('/', function(req, res) {
   res.render('index');
 });

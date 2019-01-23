@@ -3,32 +3,30 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
 const checkAuth = require('../middleware/check-auth.js');
+const upload = multer({dest:'./uploads/'})
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null,'./uploads/'); 
-  },
-  filename: function(req, file, cb){
-    cb(null, file.fieldname + '-' + Date.now()+ file.originalname);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null,'./uploads/'); 
+//   }
+// });
 
-const filefilter=function(req, file, cb){
-  if(file.mimetype==='image/jpeg'||file.mimetype==='image/png'){
-    cb(null, true);
-  }
-  else {
-    cb(null, false);
-  }
-}
+// const filefilter=function(req, file, cb){
+//   if(file.mimetype==='image/jpeg'||file.mimetype==='image/png'){
+//     cb(null, true);
+//   }
+//   else {
+//     cb(null, false);
+//   }
+// }
 
-const upload = multer({
-  storage:storage,
-  limits:{
-    fileSize: 1024*1024*5
-  },
-  fileFilter: filefilter
-});
+// const upload = multer({
+//   storage:storage,
+//   limits:{
+//     fileSize: 1024*1024*5
+//   },
+//   fileFilter: filefilter
+// });
 
 const Project = require('../models/project');
 
