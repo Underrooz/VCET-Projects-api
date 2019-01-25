@@ -3,30 +3,32 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
 const checkAuth = require('../middleware/check-auth.js');
-const upload = multer({dest:'./uploads/'})
 
-// const storage = multer.diskStorage({
-//   destination: function(req, file, cb) {
-//     cb(null,'./uploads/'); 
-//   }
-// });
+ const storage = multer.diskStorage({
+   destination: function(req, file, cb) {
+     cb(null,'./uploads/'); 
+   },
+   filename:function(req, file, cb){
+     cb(null, Date.now()+file.originalname)
+   }
+ });
 
-// const filefilter=function(req, file, cb){
-//   if(file.mimetype==='image/jpeg'||file.mimetype==='image/png'){
-//     cb(null, true);
-//   }
-//   else {
-//     cb(null, false);
-//   }
-// }
+ const filefilter=function(req, file, cb){
+   if(file.mimetype==='image/jpeg'||file.mimetype==='image/png'){
+     cb(null, true);
+   }
+   else {
+     cb(null, false);
+   }
+ }
 
-// const upload = multer({
-//   storage:storage,
-//   limits:{
-//     fileSize: 1024*1024*5
-//   },
-//   fileFilter: filefilter
-// });
+ const upload = multer({
+   storage:storage,
+   limits:{
+     fileSize: 1024*1024*5
+   },
+   fileFilter: filefilter
+ });
 
 const Project = require('../models/project');
 
@@ -55,6 +57,8 @@ router.get('/', (req, res, next)=>{
 });
 
 router.post('/', checkAuth, upload.single('projectImage'), (req, res, next)=>{
+  console.log(req.file);
+  
   const project = new Project({
     _id: new mongoose.Types.ObjectId(),
     collegeId: req.body.user,
@@ -62,8 +66,8 @@ router.post('/', checkAuth, upload.single('projectImage'), (req, res, next)=>{
     teamMembers: req.body.teamMembers,
     dept: req.body.dept,
     abstract: req.body.abstract,
-    projectImage: req.body.projectImage,
-    document: req.body.document,
+    projectImage: req.file.path,
+    //document: req.body.document,
     contact: req.body.contact
   });
   project.save()
