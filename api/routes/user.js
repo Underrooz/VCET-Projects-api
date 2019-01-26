@@ -4,19 +4,29 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const checkAuth = require('../middleware/check-auth.js');
+
 
 router.post('/signup',(req, res, next)=>{
-  console.log(req.body.collegeId);
+  console.log(req.body)
   User.find({collegeId:req.body.collegeId}).exec()
   .then(user=>{
     console.log(user.length);
     //check if id exists
     if(user.length>=1){
-      return res.status(409).json({
+      return res.status(200).json({
         message:'College Id exists!',
         success: false
       });
-    }else {
+    }
+    if(req.body.password!==req.body.password1){
+      return res.json({
+        message:'passwords do not match',
+        success: false
+      });
+    }else{
+      console.log('ddasd')
+    }
       //hashing password
       bcrypt.hash(req.body.password, 10, (err, hash)=>{
         if(err){
@@ -29,11 +39,12 @@ router.post('/signup',(req, res, next)=>{
             _id: new mongoose.Types.ObjectId(),
             collegeId: req.body.collegeId,
             password: hash
+           
           });
           user.save().then(result=>{
             console.log(result);
             res.status(201).json({
-              mesage: 'user created',
+              message: 'Welcome!',
               success: true
             });
           }).catch(err=>{
@@ -44,21 +55,23 @@ router.post('/signup',(req, res, next)=>{
           });
         }
       });
-    }
   });
 });
 
 router.post('/login',(req, res, next)=>{
+  console.log(req.body);
   User.find({collegeId:req.body.collegeId}).exec().then(user=>{
     if(user.length<1){
-      return res.status(401).json({
+      return res.status(200).json({
         message: "Authentication Failed",
         success: false
       });
     }
     bcrypt.compare(req.body.password, user[0].password, (err, result)=>{
+     
+      
       if (err) {
-        return res.status(401).json({
+        return res.status(200).json({
           message:'Authentication Failed',
           success: false
         });
@@ -72,14 +85,14 @@ router.post('/login',(req, res, next)=>{
         {
           expiresIn:"1h"
         });
-        return res.status(401).json({
+        return res.status(200).json({
           message:'LogIn Successful',
           success: true,
           data:{token: token}
         });
       }
-      res.status(401).json({
-        message: 'auth failed',
+      res.status(200).json({
+        message: 'Authentication Failed',
 
       });
     });
@@ -91,7 +104,7 @@ router.post('/login',(req, res, next)=>{
   });
 });
 
-router.delete('/:collegeId', (req, res, next)=>{
+router.delete('/:collegeId', checkAuth ,(req, res, next)=>{
   User.remove({collegeId:req.params.collegeId}).exec().then(result=>{
     res.status(200).json({
       message:"collegeId deleted!"
