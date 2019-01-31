@@ -8,10 +8,8 @@ const checkAuth = require('../middleware/check-auth.js');
 
 
 router.post('/signup',(req, res, next)=>{
-  console.log(req.body)
   User.find({collegeId:req.body.collegeId}).exec()
   .then(user=>{
-    console.log(user.length);
     //check if id exists
     if(user.length>=1){
       return res.status(200).json({
@@ -24,15 +22,13 @@ router.post('/signup',(req, res, next)=>{
         message:'passwords do not match',
         success: false
       });
-    }else{
-      console.log('ddasd')
     }
-      //hashing password
+     //hashing password
       bcrypt.hash(req.body.password, 10, (err, hash)=>{
         if(err){
           console.log(err);
           return res.status(500).json({
-            error1: err
+            error: err
           });
         }else {
           const user = new User({
@@ -59,7 +55,7 @@ router.post('/signup',(req, res, next)=>{
 });
 
 router.post('/login',(req, res, next)=>{
-  console.log(req.body);
+  
   User.find({collegeId:req.body.collegeId}).exec().then(user=>{
     if(user.length<1){
       return res.status(200).json({
@@ -88,7 +84,10 @@ router.post('/login',(req, res, next)=>{
         return res.status(200).json({
           message:'LogIn Successful',
           success: true,
-          data:{token: token}
+          data:{
+            token: token,
+            
+          }
         });
       }
       res.status(200).json({

@@ -4,31 +4,31 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const checkAuth = require('../middleware/check-auth.js');
 
- const storage = multer.diskStorage({
-   destination: function(req, file, cb) {
-     cb(null,'./uploads/'); 
-   },
-   filename:function(req, file, cb){
-     cb(null, Date.now()+file.originalname)
-   }
- });
+//  const storage = multer.diskStorage({
+//    destination: function(req, file, cb) {
+//      cb(null,'./uploads/'); 
+//    },
+//    filename:function(req, file, cb){
+//      cb(null, Date.now()+file.originalname)
+//    }
+//  });
 
- const filefilter=function(req, file, cb){
-   if(file.mimetype==='image/jpeg'||file.mimetype==='image/png'){
-     cb(null, true);
-   }
-   else {
-     cb(null, false);
-   }
- }
+//  const filefilter=function(req, file, cb){
+//    if(file.mimetype==='image/jpeg'||file.mimetype==='image/png'){
+//      cb(null, true);
+//    }
+//    else {
+//      cb(null, false);
+//    }
+//  }
 
- const upload = multer({
-   storage:storage,
-   limits:{
-     fileSize: 1024*1024*5
-   },
-   fileFilter: filefilter
- });
+//  const upload = multer({
+//    storage:storage,
+//    limits:{
+//      fileSize: 1024*1024*5
+//    },
+//    fileFilter: filefilter
+//  });
 
 const Project = require('../models/project');
 
@@ -39,11 +39,13 @@ router.get('/', (req, res, next)=>{
       return res.status(200).json({
         success:true, 
         message:"no docs found",
-        data:{}
+        data:{},
+        count:"0"
       });
     }else{
       const _data = { 
         success:true,
+        count:data.length,
         data
       };
       res.status(200).json(_data);
@@ -55,10 +57,10 @@ router.get('/', (req, res, next)=>{
     });
   });
 });
+//upload.single('projectImage')
 
-router.post('/', checkAuth, upload.single('projectImage'), (req, res, next)=>{
-  console.log(req.file);
-  
+router.post('/', checkAuth, (req, res, next)=>{
+      
   const project = new Project({
     _id: new mongoose.Types.ObjectId(),
     collegeId: req.body.user,
@@ -66,7 +68,7 @@ router.post('/', checkAuth, upload.single('projectImage'), (req, res, next)=>{
     teamMembers: req.body.teamMembers,
     dept: req.body.dept,
     abstract: req.body.abstract,
-    projectImage: req.file.path,
+    // projectImage: req.file.path,
     //document: req.body.document,
     contact: req.body.contact
   });
