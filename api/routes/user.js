@@ -59,7 +59,7 @@ router.post('/login',(req, res, next)=>{
   User.find({collegeId:req.body.collegeId}).exec().then(user=>{
     if(user.length<1){
       return res.status(200).json({
-        message: "Authentication Failed",
+        message: "Incorrect Details",
         success: false
       });
     }
@@ -68,7 +68,7 @@ router.post('/login',(req, res, next)=>{
       
       if (err) {
         return res.status(200).json({
-          message:'Authentication Failed',
+          message:'Incorrect Details',
           success: false
         });
       }

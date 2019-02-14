@@ -4,7 +4,7 @@ const ideaSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   collegeId: {type:Number, required: true, match: /^\d{10}$/},
   author: {type: String, required:true},
-  name: {type: String, required: true},
+  ideaName: {type: String, required: true},
   abstract: {type: String, required:true},
   document: {type: String},
   contact: {type: Number, required:true, match: '/^\d{10}$/'},

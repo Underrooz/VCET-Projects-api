@@ -11,11 +11,13 @@ router.get('/', (req, res, next)=>{
       return res.status(200).json({
         success:true, 
         message:"no docs found",
-        data:{}
+        data:{},
+        count:"0"
       });
     }else{
       const _data = { 
         success:true,
+        count:data.length,
         data
       };
       res.status(200).json(_data);
@@ -60,7 +62,7 @@ router.post('/', checkAuth, (req, res, next)=>{
     _id: new mongoose.Types.ObjectId(),
     collegeId: req.body.user,
     author: req.body.author,
-    name:req.body.name,
+    ideaName:req.body.ideaName,
     abstract: req.body.abstract,
     document: req.body.document,
     contact: req.body.contact

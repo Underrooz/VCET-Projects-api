@@ -85,7 +85,7 @@ router.post('/', checkAuth, (req, res, next)=>{
   });
 });
 
-router.get('/:dept', (req, res, next)=>{
+router.get('/dept/:dept', (req, res, next)=>{
   const _dept=req.params.dept;
   Project.find({dept:_dept})
   .exec()
@@ -94,11 +94,39 @@ router.get('/:dept', (req, res, next)=>{
       return res.status(404).json({
         success:true, 
         message:"no docs found",
+        count:"0",
         data:{}
       });
     }else{
       const _data = { 
         success:true,
+        count:data.length,
+        data
+      };
+      res.status(200).json(_data);
+    }
+  })
+  .catch(err=> {
+    console.log(err);
+    res.status(500).json({error: err});
+  });
+});
+router.get('/id/:projectId', (req, res, next)=>{
+  const pro_id=req.params.projectId;
+  Project.find({_id:pro_id})
+  .exec()
+  .then(data=>{
+    if(data.length<=0){
+      return res.status(404).json({
+        success:true, 
+        message:"no doc such found",
+        count:"0",
+        data:{}
+      });
+    }else{
+      const _data = { 
+        success:true,
+        count:data.length,
         data
       };
       res.status(200).json(_data);
@@ -110,7 +138,7 @@ router.get('/:dept', (req, res, next)=>{
   });
 });
 
-router.patch('/:projectId', checkAuth, (req, res, next)=>{
+router.patch('/:projectId',checkAuth, (req, res, next)=>{
   const id=req.params.projectId;
   const updateOps={};
   for(const ops of req.body){
@@ -118,7 +146,6 @@ router.patch('/:projectId', checkAuth, (req, res, next)=>{
   }
   Project.update({_id:id},{$set:updateOps})
   .exec().then(result=>{
-    console.log(result);
     res.status(200).json({
       success: true,
       message:"Operation Successful"
